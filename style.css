@@ -1,0 +1,551 @@
+@property --photo-rotation-progress {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --stat-progress {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+/* Temel Stiller */
+:where(h3) {
+  margin-block-end: var(--size-3);
+}
+
+.container {
+  max-width: 80rem;
+  padding-inline: var(--size-5);
+  margin-block: 2rem;
+  margin-inline: auto;
+}
+
+/* Hero Bölümü */
+.hero {
+  container-type: inline-size;
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--size-5);
+  background: linear-gradient(135deg, var(--gray-0) 0%, var(--gray-1) 100%);
+
+  .hero__title {
+    font-size: var(--font-size-fluid-3);
+    text-align: center;
+    background-image: var(--gradient-10);
+    background-clip: text;
+    color: transparent;
+
+    @container (width > 40rem) {
+      font-size: calc(var(--font-size-8) * 1.5);
+    }
+  }
+
+  .hero__payoff {
+    font-size: var(--font-size-fluid-1);
+    text-align: center;
+    font-weight: var(--font-weight-9);
+    color: var(--gray-7);
+  }
+}
+
+.grid-center {
+  display: grid;
+  place-items: center;
+}
+
+.section {
+  container-type: inline-size;
+  position: relative;
+
+  .section__title {
+    margin-block: 0 var(--size-fluid-2);
+    text-align: center;
+    font-size: var(--font-size-fluid-2);
+  }
+}
+
+/* Öne Çıkan Çalışma */
+.featured-work {
+  overflow: hidden;
+  position: relative;
+  perspective: 1000px;
+  border-radius: var(--radius-3);
+}
+
+.featured-image {
+  transform-style: preserve-3d;
+  width: 100%;
+  aspect-ratio: 16/9;
+
+  animation: featuredAppear 1ms linear, featuredFadeIn 1s ease-out;
+  animation-timeline: scroll(root), auto;
+  animation-range: -10% 20%;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--radius-3);
+    box-shadow: var(--shadow-3);
+  }
+}
+
+.featured-mobile {
+  width: 22rem;
+  aspect-ratio: 4/5;
+  position: absolute;
+  inset: auto 5% 3% auto;
+  z-index: 1;
+  opacity: 0;
+
+  animation: featuredSmallAppear 1ms cubic-bezier(0.17, 0.67, 0.34, 1.36) forwards;
+  animation-timeline: scroll(root);
+  animation-range: 5% 25%;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--radius-3);
+    box-shadow: var(--shadow-3);
+    border: 4px solid var(--gray-0);
+  }
+}
+
+/* Panel Stilleri */
+.panel {
+  box-shadow: var(--shadow-3);
+  background: var(--gray-1);
+  border-radius: var(--radius-3);
+  color: var(--gray-8);
+  display: flex;
+  justify-content: center;
+}
+
+.panel--no-overflow {
+  overflow: clip;
+}
+
+.panel__content {
+  padding: var(--size-fluid-4);
+}
+
+.divider-v {
+  display: grid;
+  gap: var(--size-fluid-6);
+}
+
+.split-h {
+  display: grid;
+  gap: 1rem;
+
+  @container (width > 48.7rem) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Fotoğraf Kartları */
+.photo-cards {
+  container-type: inline-size;
+  position: relative;
+  height: 50vh;
+  width: min(100%, 350px);
+  clip-path: polygon(-50% -50%, 400% -50%, 150% 100%, -80% 100%);
+  margin-inline: auto;
+  margin-block-start: -20%;
+}
+
+.photo-card {
+  --index: sibling-index();
+  --count: sibling-count();
+
+  --angle-min: -45;
+  --angle-max: 45;
+  --angle-diff: calc(var(--angle-max) - var(--angle-min));
+  --angle-step: calc(var(--angle-diff) / (var(--count) + 1));
+  --angle: calc(var(--angle-min) + var(--angle-step) * var(--index));
+  --angle-deg: calc((var(--angle) * var(--photo-rotation-progress)) * 1deg);
+
+  width: 100%;
+  position: absolute;
+  transform-origin: bottom center;
+  rotate: var(--angle-deg);
+  translate: 0 50%;
+
+  animation: cardUp 1ms ease-out both, cardRotate 1ms ease-out forwards;
+  animation-timeline: view(block);
+  animation-range: entry 100% contain 50%;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--radius-3);
+    box-shadow: var(--shadow-3);
+    border: 4px solid var(--gray-0);
+  }
+}
+
+/* Servis Görseli */
+.service-image {
+  clip-path: shape(
+    from 100% 0,
+    line to 90% 0%,
+    curve to 90% 100% with 50% 10% / 50% 90%,
+    line to 100% 100%,
+    close
+  );
+
+  animation: imageShape 1ms linear forwards;
+  animation-timeline: view(block);
+  animation-range: entry 60% contain 35%;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+/* Servis Listesi */
+.services-list {
+  display: grid;
+  gap: var(--size-2);
+  margin-block-start: var(--size-4);
+}
+
+.service-item {
+  padding: var(--size-2) var(--size-3);
+  background: var(--gray-0);
+  border-radius: var(--radius-2);
+  border-left: 4px solid var(--blue-5);
+  font-weight: var(--font-weight-6);
+}
+
+/* İstatistikler */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--size-5);
+  text-align: center;
+}
+
+.stat {
+  .stat__number {
+    font-size: var(--font-size-fluid-2);
+    font-weight: var(--font-weight-9);
+    color: var(--blue-6);
+    margin-block-end: var(--size-2);
+  }
+
+  .stat__label {
+    font-size: var(--font-size-0);
+    color: var(--gray-6);
+    font-weight: var(--font-weight-6);
+  }
+}
+
+/* Yorumlar */
+.testimonial-container {
+  display: grid;
+  gap: 1rem;
+
+  @container (width > 40rem) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.testimonial {
+  --index: sibling-index();
+  --count: sibling-count();
+
+  --entry-start: 20%;
+  --entry-step: calc((100% - var(--entry-start)) / (var(--count) + 1));
+  --entry: calc(var(--entry-start) + var(--index) * var(--entry-step));
+
+  background: var(--gray-1);
+  width: 100%;
+  border-radius: var(--radius-3);
+  padding: var(--size-fluid-4);
+  color: var(--gray-8);
+
+  animation: reviewUp 1ms ease-out both;
+  animation-timeline: view(block);
+  animation-range: entry var(--entry) contain 50%;
+
+  h3 {
+    font-size: var(--font-size-fluid-1);
+    margin-block-end: var(--size-fluid-3);
+    color: var(--blue-6);
+  }
+}
+
+/* İletişim */
+.contact-section {
+  text-align: center;
+  padding: var(--size-fluid-4);
+
+  h2 {
+    font-size: var(--font-size-fluid-2);
+    margin-block-end: var(--size-3);
+  }
+
+  p {
+    margin-block-end: var(--size-5);
+    color: var(--gray-6);
+  }
+}
+
+.contact-info {
+  display: grid;
+  gap: var(--size-3);
+  justify-content: center;
+}
+
+.contact-item {
+  font-size: var(--font-size-2);
+  padding: var(--size-2) var(--size-4);
+  background: var(--gray-0);
+  border-radius: var(--radius-2);
+}
+
+/* İkinci Galeri Grid */
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--size-3);
+  container-type: inline-size;
+}
+
+.grid-photo {
+  animation: photoScale 1ms ease-out both;
+  animation-timeline: view(block);
+  animation-range: entry 60% contain 40%;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--radius-2);
+    box-shadow: var(--shadow-2);
+    transition: transform 0.3s ease;
+  }
+  
+  &:hover img {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes photoScale {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Müşteri Avatar */
+.client-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 auto var(--size-3);
+  border: 3px solid var(--blue-3);
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.testimonial {
+  text-align: center;
+  
+  h3 {
+    margin-block-end: var(--size-2);
+  }
+}
+
+/* Responsive Grid */
+@container (width > 48.7rem) {
+  .photo-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@container (width > 60rem) {
+  .photo-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--size-4);
+  }
+}
+
+/* Loading optimizasyonu */
+img {
+  transition: opacity 0.3s ease;
+}
+
+img[loading="lazy"] {
+  opacity: 0;
+}
+
+img[loading="lazy"].loaded {
+  opacity: 1;
+}
+
+/* İstatistikler - CSS ile sayı animasyonu */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--size-5);
+  text-align: center;
+}
+
+.stat {
+  animation: statFadeIn 1ms ease-out both;
+  animation-timeline: view(block);
+  animation-range: entry 70% contain 50%;
+  
+  .stat__number {
+    font-size: var(--font-size-fluid-2);
+    font-weight: var(--font-weight-9);
+    color: var(--blue-6);
+    margin-block-end: var(--size-2);
+    
+    /* CSS counter ile statik sayılar gösterilebilir */
+    /* Gerçek sayılar HTML'de yazılacak */
+  }
+
+  .stat__label {
+    font-size: var(--font-size-0);
+    color: var(--gray-6);
+    font-weight: var(--font-weight-6);
+  }
+}
+
+/* Basit fade-in animasyonu */
+@keyframes statFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Footer */
+.footer {
+  height: 20dvh;
+  display: grid;
+  place-items: center;
+  color: var(--gray-6);
+  font-size: var(--font-size-0);
+}
+
+.footer span {
+  display: block;
+  text-align: center;
+  line-height: 1.5;
+  margin: 0;
+  font-size: large;
+}
+
+/* Animasyonlar */
+@keyframes featuredAppear {
+  from {
+    transform: translateZ(-40rem) rotateX(45deg);
+  }
+  to {
+    transform: translateZ(0rem) rotateX(0deg);
+  }
+}
+
+@keyframes featuredFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes featuredSmallAppear {
+  from {
+    opacity: 0;
+    transform: translateX(50%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0%);
+  }
+}
+
+@keyframes cardUp {
+  from {
+    translate: 0 80%;
+  }
+  to {
+    translate: 0 20%;
+  }
+}
+
+@keyframes cardRotate {
+  from {
+    --photo-rotation-progress: 0;
+  }
+  to {
+    --photo-rotation-progress: 1;
+  }
+}
+
+@keyframes imageShape {
+  50% {
+    clip-path: shape(
+      from 100% 0,
+      line to 50% 0%,
+      curve to 50% 100% with -10% 10% / -10% 90%,
+      line to 100% 100%,
+      close
+    );
+  }
+
+  100% {
+    clip-path: shape(
+      from 100% 0,
+      line to 0% 0%,
+      curve to 0% 100% with 0% 0% / 0% 100%,
+      line to 100% 100%,
+      close
+    );
+  }
+}
+
+@keyframes reviewUp {
+  from {
+    translate: 0 40%;
+  }
+  to {
+    translate: 0 0%;
+  }
+}
+
+@keyframes statCountUp {
+  from {
+    --stat-progress: 0;
+  }
+  to {
+    --stat-progress: 1;
+  }
+}
